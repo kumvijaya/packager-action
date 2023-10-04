@@ -7,7 +7,7 @@ jobs:
     name: Find Folders
     runs-on: ubuntu-latest
     outputs:
-      folders: ${{ toJSON(steps.*.outputs.value) }}
+      folders: ${{ toJSON(steps.matrix.outputs.value) }}
     steps:
       - uses: actions/checkout@v3
       - name: Collect folders
@@ -25,13 +25,15 @@ jobs:
                 echo "ignoring $dir"
               else
                 echo "collecting $dir"
-                echo "value=$dir" >> $GITHUB_OUTPUT
+                dirs[i++]="${d%/}"
               fi
           done
+          echo "value=$(jq --compact-output --null-input '$ARGS.positional' --args -- \"${dirs[@]}\")" >> $GITHUB_OUTPUT
+          
 
       - name: Show folders
         run: |
-           echo "${{ toJSON(steps.*.outputs.value) }}"
+           echo "${{ toJSON(steps.matrix.outputs.value) }}"
         
   package:
     name: Package folders
