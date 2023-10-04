@@ -5,7 +5,8 @@ on:
 jobs:
   find-folders:
     name: Find Folders
-    container: debian:buster-slim
+    permissions: read-all|write-all
+    runs-on: ubuntu-latest
     outputs:
       folders: ${{ steps.jobs.outputs.folders }}
     steps:
