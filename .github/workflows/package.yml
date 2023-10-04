@@ -3,26 +3,32 @@ on:
   push:
   pull_request:
 jobs:
+  find-folders:
+    name: Find Folders
+    outputs:
+      folders: ${{ steps.jobs.outputs.folders }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: jobs
+        uses: philips-labs/list-folders-action@v1
+        with:
+          path: '.'
+          
   package:
+    name: Package folders
+    needs: [find-folders]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        folder: ['folder1', 'folder2']
+        folder: ${{ fromJson(needs.find-folders.outputs.folders )}}
     steps:
       - uses: actions/checkout@v3
-      
+          
       - name: Pack Upload ${{ matrix.folder }}
+        if: ${{ !contains(fromJson('[".github", ".git"]'), matrix.folder) }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.folder }}.zip
           path: |
             ${{ matrix.folder }}
           retention-days: 90
-            
-      # - name: Pack Upload folder2
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: folder2.zip
-      #     path: |
-      #       folder2
-      #     retention-days: 90
