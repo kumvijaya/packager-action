@@ -7,12 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/upload-artifact@v3
+      - name: Uplaod folder1
+        uses: actions/upload-artifact@v3
         with:
           name: folder1.zip
           path: |
             folder1
-      - uses: actions/upload-artifact@v3
+      - name: Uplaod folder2
+        uses: actions/upload-artifact@v3
         with:
           name: folder2.zip
           path: |
