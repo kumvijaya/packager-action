@@ -7,7 +7,7 @@ jobs:
     name: Find Folders
     runs-on: ubuntu-latest
     outputs:
-      folders: ${{ steps.matrix.outputs.value }}
+      folders: ${{ toJSON(steps.matrix.outputs.value) }}
     steps:
       - uses: actions/checkout@v3
       - id: matrix
