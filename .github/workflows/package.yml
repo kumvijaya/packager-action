@@ -7,16 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Create zip files
-        run: 
-          zip -r -q folder1.zip folder1
-          zip -r -q folder2.zip folder2
-        
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
-          name: package.zip
+          name: folder1.zip
           path: |
-            folder1.zip
-            folder2.zip
-  
+            folder1
+      - uses: actions/upload-artifact@v3
+        with:
+          name: folder2.zip
+          path: |
+            folder2
