@@ -4,6 +4,7 @@ on:
   pull_request:
 jobs:
   find-folders:
+    runs-on: ubuntu-latest
     name: Find Folders
     outputs:
       folders: ${{ steps.jobs.outputs.folders }}
