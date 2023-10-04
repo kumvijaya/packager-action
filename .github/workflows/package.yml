@@ -14,7 +14,10 @@ jobs:
         run: |
           ignore_folders=(".github" ".git")
           let i=1
-          for dir in "${dirs[@]}"; do
+          declare -a dirs
+          for d in */
+          do
+              dir="${d%/}"
               echo "$((i++)) $dir"
               if [[ ${ignore_folders[@]} =~ $dir ]]
               then
@@ -24,7 +27,7 @@ jobs:
                 echo "value=$dir" >> $GITHUB_OUTPUT
               fi
           done
-     
+  
   package:
     name: Package folders
     needs: [find-folders]
