@@ -7,15 +7,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Uplaod folder1
+      
+      - name: Pack Upload folder1
         uses: actions/upload-artifact@v3
         with:
           name: folder1.zip
           path: |
             folder1
-      - name: Uplaod folder2
+          retention-days: 90
+            
+      - name: Pack Upload folder2
         uses: actions/upload-artifact@v3
         with:
           name: folder2.zip
           path: |
             folder2
+          retention-days: 90
