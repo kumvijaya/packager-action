@@ -5,7 +5,7 @@ on:
 jobs:
   find-folders:
     name: Find Folders
-    permissions: read-all|write-all
+    permissions: write-all
     runs-on: ubuntu-latest
     outputs:
       folders: ${{ steps.jobs.outputs.folders }}
