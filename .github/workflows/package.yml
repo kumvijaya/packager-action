@@ -10,7 +10,7 @@ jobs:
       folders: ${{ steps.matrix.outputs.value }}
     steps:
       - uses: actions/checkout@v3
-      - name: Collect folders
+      - name: Collect Folders
         id: matrix
         run: |
           ignore_folders=(".github" ".git")
@@ -32,7 +32,7 @@ jobs:
 
         
   package:
-    name: Package folders
+    name: Package Folders
     needs: [find-folders]
     runs-on: ubuntu-latest
     strategy:
