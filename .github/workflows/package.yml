@@ -8,13 +8,12 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-latest
     outputs:
-      folders: ${{ steps.jobs.outputs.folders }}
+      folders: ${{ steps.matrix.outputs.value }}
     steps:
       - uses: actions/checkout@v3
-      - id: jobs
-        uses: philips-labs/list-folder-action@v2
-        with:
-          path: '.'
+      - id: matrix
+        run: |
+          echo '::set-output name=value::[\"folder1\", \"folder2\", \".github\"]'
           
   package:
     name: Package folders
