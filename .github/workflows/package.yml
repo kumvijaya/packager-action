@@ -19,7 +19,6 @@ jobs:
           for d in */
           do
               dir="${d%/}"
-              echo "$((i++)) $dir"
               if [[ ${ignore_folders[@]} =~ $dir ]]
               then
                 echo "ignoring $dir"
@@ -31,10 +30,6 @@ jobs:
           arr=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${dirs[@]}")
           echo "value=$arr" >> $GITHUB_OUTPUT
 
-      - name: Show folders
-        run: |
-           echo "${{ steps.matrix.outputs.value }}"
-           echo "${{ toJSON(steps.matrix.outputs.value) }}"
         
   package:
     name: Package folders
@@ -42,11 +37,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        folder: ${{ fromJson(needs.find-folders.outputs.folders) }}
-        
+        folder: ${{ fromJson(needs.find-folders.outputs.folders) }}  
     steps:
       - uses: actions/checkout@v3
-          
       - name: Pack Upload ${{ matrix.folder }}
         uses: actions/upload-artifact@v3
         with:
