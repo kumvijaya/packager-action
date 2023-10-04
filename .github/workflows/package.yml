@@ -28,7 +28,7 @@ jobs:
                 dirs[i++]="${d%/}"
               fi
           done
-          echo "value=$(jq --compact-output --null-input '$ARGS.positional' --args -- \"${dirs[@]}\")" >> $GITHUB_OUTPUT
+          echo "value=$(jq --compact-output --null-input '$ARGS.positional' --args -- '${dirs[@]}')" >> $GITHUB_OUTPUT
           
 
       - name: Show folders
