@@ -5,7 +5,6 @@ on:
 jobs:
   find-folders:
     name: Find Folders
-    permissions: write-all
     runs-on: ubuntu-latest
     outputs:
       folders: ${{ steps.matrix.outputs.value }}
@@ -13,7 +12,7 @@ jobs:
       - uses: actions/checkout@v3
       - id: matrix
         run: |
-          echo '::set-output name=value::[\"folder1\", \"folder2\", \".github\"]'
+          echo '::set-output name=value::["folder1", "folder2", ".github"]'
           
   package:
     name: Package folders
