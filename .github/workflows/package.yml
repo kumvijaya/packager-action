@@ -10,7 +10,8 @@ jobs:
       folders: ${{ toJSON(steps.matrix.outputs.value) }}
     steps:
       - uses: actions/checkout@v3
-      - id: matrix
+      - name: Collect folders
+        id: matrix
         run: |
           ignore_folders=(".github" ".git")
           let i=1
@@ -27,19 +28,23 @@ jobs:
                 echo "value=$dir" >> $GITHUB_OUTPUT
               fi
           done
-  
+
+      - name: Show folders
+        run: |
+           echo "${{ toJSON(steps.matrix.outputs.value) }}"
+        
   package:
     name: Package folders
     needs: [find-folders]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        folder: ${{ fromJson(needs.find-folders.outputs.folders )}}
+        folder: ${{ fromJSON(needs.find-folders.outputs.folders) }}
+        
     steps:
       - uses: actions/checkout@v3
           
       - name: Pack Upload ${{ matrix.folder }}
-        if: ${{ !contains(fromJson('[".github", ".git"]'), matrix.folder) }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.folder }}.zip
