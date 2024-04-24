@@ -28,6 +28,7 @@ jobs:
               fi
           done
           arr=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${dirs[@]}")
+          echo "arr=$arr"
           echo "value=$arr" >> $GITHUB_OUTPUT
 
         
