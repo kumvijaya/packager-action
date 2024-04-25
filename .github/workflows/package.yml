@@ -22,7 +22,7 @@ jobs:
           result-encoding: string
           retries: 3
           script: |
-            const env = core.getInput('env')
+            const env = context.payload.inputs.env;
             console.log(`env: ${env}`)
             let tasks;
             switch (env) {
