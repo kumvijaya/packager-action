@@ -23,21 +23,21 @@ jobs:
           retries: 3
           script: |
             const env = core.getInput('env')
-            let result;
+            let jobs;
             switch (env) {
               case 'dev':
-                result = ['deploy', 'test'];
+                jobs = ['deploy', 'test'];
                 break;
               case 'qa':
-                result = ['deploy', 'test', 'load-test'];
+                jobs = ['deploy', 'test', 'load-test'];
                 break;
               case 'prod':
-                result = ['check-ticket', 'deploy'];
+                jobs = ['check-ticket', 'deploy'];
                 break;
               default:
-                result = ['deploy', 'test'];
+                jobs = ['deploy', 'test'];
             }
-            core.setOutput('jobs', JSON.stringify(array))
+            core.setOutput('jobs', JSON.stringify(jobs))
   package:
     name: ${{ matrix.job }}
     needs: [get-jobs]
