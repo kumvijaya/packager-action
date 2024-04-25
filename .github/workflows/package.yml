@@ -1,50 +1,50 @@
-name: Package
+name: Deployment
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
+    inputs:
+      env:
+        type: choice
+        description: Choode env
+        options:
+        - dev
+        - qa
+        - prod
 jobs:
-  find-folders:
-    name: Find Folders
+  get-jobs:
+    name: Get Jobs
     runs-on: ubuntu-latest
     outputs:
-      folders: ${{ steps.matrix.outputs.value }}
+      jobs: ${{ steps.set-jobs.outputs.jobs }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Collect Folders
-        id: matrix
-        run: |
-          ignore_folders=(".github" ".git")
-          let i=1
-          declare -a dirs
-          for d in */
-          do
-              dir="${d%/}"
-              if [[ ${ignore_folders[@]} =~ $dir ]]
-              then
-                echo "ignoring $dir"
-              else
-                echo "collecting $dir"
-                dirs[i++]="${d%/}"
-              fi
-          done
-          arr=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${dirs[@]}")
-          echo "arr=$arr"
-          echo "value=$arr" >> $GITHUB_OUTPUT
-
-        
+      - uses: actions/github-script@v7
+        id: set-jobs
+        with:
+          result-encoding: string
+          retries: 3
+          script: |
+            const env = core.getInput('env')
+            let result;
+            switch (env) {
+              case 'dev':
+                result = ['deploy', 'test'];
+                break;
+              case 'qa':
+                result = ['deploy', 'test', 'load-test'];
+                break;
+              case 'prod':
+                result = ['check-ticket', 'deploy'];
+                break;
+              default:
+                result = ['deploy', 'test'];
+            }
+            core.setOutput('jobs', JSON.stringify(array))
   package:
-    name: Package Folders
-    needs: [find-folders]
+    name: ${{ matrix.job }}
+    needs: [get-jobs]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        folder: ${{ fromJson(needs.find-folders.outputs.folders) }}  
+        job: ${{ fromJson(needs.get-jobs.outputs.jobs) }}  
     steps:
-      - uses: actions/checkout@v3
-      - name: Pack Upload ${{ matrix.folder }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.folder }}.zip
-          path: |
-            ${{ matrix.folder }}
-          retention-days: 90
+      - name: Use matrix
+        run: echo "Execute ${{ matrix.job }}"
