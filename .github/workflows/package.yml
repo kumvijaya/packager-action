@@ -10,41 +10,41 @@ on:
         - qa
         - prod
 jobs:
-  get-jobs:
-    name: Get Jobs
+  get-tasks:
+    name: set tasks for ${{ github.event.inputs.env }}
     runs-on: ubuntu-latest
     outputs:
-      jobs: ${{ steps.set-jobs.outputs.jobs }}
+      tasks: ${{ steps.set-tasks.outputs.tasks }}
     steps:
       - uses: actions/github-script@v7
-        id: set-jobs
+        id: set-tasks
         with:
           result-encoding: string
           retries: 3
           script: |
             const env = core.getInput('env')
-            let jobs;
+            let tasks;
             switch (env) {
               case 'dev':
-                jobs = ['deploy', 'test'];
+                tasks = ['deploy', 'test'];
                 break;
               case 'qa':
-                jobs = ['deploy', 'test', 'load-test'];
+                tasks = ['deploy', 'test', 'load-test'];
                 break;
               case 'prod':
-                jobs = ['check-ticket', 'deploy'];
+                tasks = ['check-ticket', 'deploy'];
                 break;
               default:
-                jobs = ['deploy', 'test'];
+                tasks = ['deploy', 'test'];
             }
-            core.setOutput('jobs', JSON.stringify(jobs))
-  package:
-    name: ${{ matrix.job }}
-    needs: [get-jobs]
+            core.setOutput('tasks', JSON.stringify(tasks))
+  tasks:
+    name: ${{ matrix.task }}
+    needs: [get-tasks]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        job: ${{ fromJson(needs.get-jobs.outputs.jobs) }}  
+        task: ${{ fromJson(needs.get-tasks.outputs.tasks) }}  
     steps:
       - name: Use matrix
-        run: echo "Execute ${{ matrix.job }}"
+        run: echo "Execute ${{ matrix.task }}"
