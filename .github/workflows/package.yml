@@ -4,7 +4,7 @@ on:
     inputs:
       env:
         type: choice
-        description: Choode env
+        description: Choose env
         options:
         - dev
         - qa
@@ -23,6 +23,7 @@ jobs:
           retries: 3
           script: |
             const env = core.getInput('env')
+            console.log(`env: ${env}`)
             let tasks;
             switch (env) {
               case 'dev':
