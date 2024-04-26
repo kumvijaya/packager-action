@@ -16,6 +16,8 @@ jobs:
     environment: ${{ github.event.inputs.env }}
     outputs:
       tasks: ${{ steps.set-tasks.outputs.tasks }}
+    env:
+      TASKS: ${{ env.TASKS }}
     steps:
       - uses: actions/github-script@v7
         id: set-tasks
