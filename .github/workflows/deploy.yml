@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.env }}
     outputs:
-      EXEC_TASKS: ${{ steps.set-tasks.outputs.tasks }}
+      tasks: ${{ steps.set-tasks.outputs.tasks }}
     steps:
       - uses: actions/github-script@v7
         id: set-tasks
