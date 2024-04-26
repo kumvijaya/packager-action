@@ -13,6 +13,7 @@ jobs:
   get-tasks:
     name: set tasks for ${{ github.event.inputs.env }}
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.env }}
     outputs:
       tasks: ${{ steps.set-tasks.outputs.tasks }}
     steps:
@@ -24,21 +25,22 @@ jobs:
           script: |
             const env = context.payload.inputs.env;
             console.log(`env: ${env}`)
-            let tasks;
-            switch (env) {
-              case 'dev':
-                tasks = ['deploy', 'test'];
-                break;
-              case 'qa':
-                tasks = ['deploy', 'test', 'load-test'];
-                break;
-              case 'prod':
-                tasks = ['check-ticket', 'deploy'];
-                break;
-              default:
-                tasks = ['deploy', 'test'];
-            }
-            core.setOutput('tasks', JSON.stringify(tasks))
+            const tasks = process.env.tasks || 'deploy, func-test';
+            # let tasks;
+            # switch (env) {
+            #   case 'dev':
+            #     tasks = ['deploy', 'test'];
+            #     break;
+            #   case 'qa':
+            #     tasks = ['deploy', 'test', 'load-test'];
+            #     break;
+            #   case 'prod':
+            #     tasks = ['check-ticket', 'deploy'];
+            #     break;
+            #   default:
+            #     tasks = ['deploy', 'test'];
+            # }
+            core.setOutput('tasks', JSON.stringify(tasks.split(',')))
   tasks:
     name: ${{ matrix.task }}
     needs: [get-tasks]
