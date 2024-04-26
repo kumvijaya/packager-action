@@ -11,7 +11,7 @@ on:
         - prod
 jobs:
   get-tasks:
-    name: set tasks for ${{ github.event.inputs.env }}
+    name: set tasks (${{ github.event.inputs.env }})
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.env }}
     outputs:
@@ -19,15 +19,13 @@ jobs:
     steps:
       - uses: actions/github-script@v7
         id: set-tasks
-        env:
-          EXEC_TASKS: ${{ env.TASKS }}
         with:
           result-encoding: string
           retries: 3
           script: |
             const env = context.payload.inputs.env;
             console.log(`env: ${env}`);
-            const tasks = process.env.EXEC_TASKS || 'deploy, func-test';
+            const tasks = process.env.TASKS;
             # let tasks;
             # switch (env) {
             #   case 'dev':
