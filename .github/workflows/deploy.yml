@@ -28,20 +28,6 @@ jobs:
             const env = context.payload.inputs.env;
             console.log(`env: ${env}`);
             const tasks = process.env.U_TASKS;
-            # let tasks;
-            # switch (env) {
-            #   case 'dev':
-            #     tasks = ['deploy', 'test'];
-            #     break;
-            #   case 'qa':
-            #     tasks = ['deploy', 'test', 'load-test'];
-            #     break;
-            #   case 'prod':
-            #     tasks = ['check-ticket', 'deploy'];
-            #     break;
-            #   default:
-            #     tasks = ['deploy', 'test'];
-            # }
             core.setOutput('tasks', JSON.stringify(tasks.split(',')))
   tasks:
     name: ${{ matrix.task }}
